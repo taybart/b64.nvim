@@ -1,6 +1,13 @@
 local M = {}
 
-function M.serde()
+function M.encode()
+  M.encdec(M.enc)
+end
+function M.decode()
+  M.encdec(M.dec)
+end
+
+function M.encdec(op)
   -- use b register
   local reg = 'b'
 
@@ -10,14 +17,7 @@ function M.serde()
 	-- Reselect the visual mode text, cut to reg b
 	vim.cmd('normal! gv"bx')
 
-  local update = vim.fn.getreg(reg)
-  if op == "enc" then
-    -- encode
-    update = M.enc(update)
-  elseif op == "dec" then
-    -- decode
-    update = M.dec(update)
-  end
+  local update = op(vim.fn.getreg(reg))
 
   -- insert new text
 	vim.cmd('normal! i'..update)
@@ -32,7 +32,7 @@ function M.serde()
 end
 
 -- http://lua-users.org/wiki/BaseSixtyFour
-local b='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/' -- You will need this for encoding/decoding
+local b='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
 -- encoding
 function M.enc(data)
   return ((data:gsub('.', function(x)
@@ -62,6 +62,5 @@ function M.dec(data)
   return string.char(c)
 end))
 end
-
 
 return M
