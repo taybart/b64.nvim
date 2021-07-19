@@ -15,12 +15,12 @@ function M.encdec(op)
   local buf_cache = vim.fn.getreg(reg)
 
 	-- Reselect the visual mode text, cut to reg b
-	vim.cmd('normal! gv"bx')
+	vim.cmd('normal! gv"'..reg..'x')
 
   local update = op(vim.fn.getreg(reg))
 
   -- insert new text
-	vim.cmd('normal! i'..update)
+	vim.cmd('normal! li'..update)
 
   if vim.g.b64_select_after_serde == 1 then
     -- Select the new text
