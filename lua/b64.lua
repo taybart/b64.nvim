@@ -19,8 +19,15 @@ function M.encdec(op)
 
   local update = op(vim.fn.getreg(reg))
 
+  local cur_col = vim.api.nvim_win_get_cursor(0)[2]
+  local line_end = vim.fn.strwidth(vim.api.nvim_get_current_line())
+
   -- insert new text
-	vim.cmd('normal! li'..update)
+  if cur_col == line_end-1 then
+    vim.cmd('normal! A'..update)
+  else
+    vim.cmd('normal! i'..update)
+  end
 
   if vim.g.b64_select_after_serde == 1 then
     -- Select the new text
@@ -32,7 +39,7 @@ function M.encdec(op)
 end
 
 -- http://lua-users.org/wiki/BaseSixtyFour
-local b='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
+local dic='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
 -- encoding
 function M.enc(data)
   return ((data:gsub('.', function(x)
@@ -43,16 +50,16 @@ function M.enc(data)
   if (#x < 6) then return '' end
   local c=0
   for i=1,6 do c=c+(x:sub(i,i)=='1' and 2^(6-i) or 0) end
-  return b:sub(c+1,c+1)
+  return dic:sub(c+1,c+1)
 end)..({ '', '==', '=' })[#data%3+1])
 end
 
 -- decoding
 function M.dec(data)
-  data = string.gsub(data, '[^'..b..'=]', '')
+  data = string.gsub(data, '[^'..dic..'=]', '')
   return (data:gsub('.', function(x)
     if (x == '=') then return '' end
-    local r,f='',(b:find(x)-1)
+    local r,f='',(dic:find(x)-1)
     for i=6,1,-1 do r=r..(f%2^i-f%2^(i-1)>0 and '1' or '0') end
     return r;
   end):gsub('%d%d%d?%d?%d?%d?%d?%d?', function(x)
