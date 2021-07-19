@@ -17,19 +17,25 @@ function M.encdec(op)
   local buf_cache = vim.fn.getreg(reg)
 
 	-- Reselect the visual mode text, cut to reg b
+	-- vim.cmd('normal! gv')
+
 	vim.cmd('normal! gv"'..reg..'x')
 
   local update = op(vim.fn.getreg(reg))
 
-  local cur_col = vim.api.nvim_win_get_cursor(0)[2]
-  local line_end = vim.fn.strwidth(vim.api.nvim_get_current_line())
+  -- local cur_col = vim.api.nvim_win_get_cursor(0)[2]
+  -- local line_end = vim.fn.strwidth(vim.api.nvim_get_current_line())
 
-  -- insert new text
-  if cur_col == line_end-1 then
-    vim.cmd('normal! A'..update)
-  else
-    vim.cmd('normal! i'..update)
-  end
+  -- -- insert new text
+  -- if cur_col == line_end-1 then
+  --   -- vim.cmd('normal! A'..update)
+  --   vim.cmd('normal! A')
+  -- else
+  --   -- vim.cmd('normal! i'..update)
+  --   vim.cmd('normal! i')
+  --   -- vim.api.nvim_put(update,"", false, false)
+  -- end
+  vim.api.nvim_paste(update, true, -1)
 
   if vim.g.b64_select_after_serde == 1 then
     -- Select the new text
