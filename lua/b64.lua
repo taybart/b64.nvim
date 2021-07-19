@@ -8,6 +8,8 @@ function M.decode()
 end
 
 function M.encdec(op)
+  local paste = vim.opt.paste
+  vim.opt.paste=true
   -- use b register
   local reg = 'b'
 
@@ -36,6 +38,7 @@ function M.encdec(op)
 
   -- restore buffer contents
   vim.fn.setreg(reg, buf_cache)
+  vim.opt.paste=paste
 end
 
 -- http://lua-users.org/wiki/BaseSixtyFour
