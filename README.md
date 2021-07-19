@@ -11,12 +11,7 @@ Plug 'taybart/b64.nvim'
 
 Usage:
 
-Highlight some text
-
-`:B64Encode`
-or 
-
-`:B64Decode`
+Highlight some text then`:B64Encode` or `:B64Decode`
 
 Recommended Keymaps:
 
