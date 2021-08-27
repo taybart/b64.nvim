@@ -1,6 +1,10 @@
 # b64.nvim
 
-Install:
+Base64 encode and decode inside of vim.
+
+Usage: Highlight some text then`:B64Encode<cr>` or `:B64Decode<cr>`
+
+#### Install
 
 ```lua
 -- packer
@@ -12,11 +16,7 @@ use { 'taybart/b64.nvim' }
 Plug 'taybart/b64.nvim'
 ```
 
-Usage:
-
-Highlight some text then`:B64Encode` or `:B64Decode`
-
-Recommended Keymaps:
+#### Recommended Keymaps
 
 ```vim
 vnoremap <silent> <leader>be :<c-u>lua require("b64").encode()<cr>
