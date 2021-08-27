@@ -1,42 +1,37 @@
-local M = {}
+local b64 = {}
 
-function M.encode()
-  M.encdec(M.enc)
-end
-function M.decode()
-  M.encdec(M.dec)
+-- encode selected text to base64
+function b64.encode()
+  b64.encdec(b64.enc)
 end
 
-function M.encdec(op)
+-- decode selected text from base64
+function b64.decode()
+  b64.encdec(b64.dec)
+end
+
+-- grab selected text and perform encode/decode
+function b64.encdec(op)
+  -- save paste mode
   local paste = vim.opt.paste
+  -- turn paste on
   vim.opt.paste=true
-  -- use b register
-  local reg = 'b'
 
-  -- save old reg contents
+  -- use b register as cache
+  local reg = 'b'
+  -- cache old reg contents
   local buf_cache = vim.fn.getreg(reg)
 
-	-- Reselect the visual mode text, cut to reg b
-	-- vim.cmd('normal! gv')
-
+  -- grab previously selected text into reg
 	vim.cmd('normal! gv"'..reg..'x')
 
+  -- perform op passed enc/dec
   local update = op(vim.fn.getreg(reg))
 
-  -- local cur_col = vim.api.nvim_win_get_cursor(0)[2]
-  -- local line_end = vim.fn.strwidth(vim.api.nvim_get_current_line())
-
-  -- -- insert new text
-  -- if cur_col == line_end-1 then
-  --   -- vim.cmd('normal! A'..update)
-  --   vim.cmd('normal! A')
-  -- else
-  --   -- vim.cmd('normal! i'..update)
-  --   vim.cmd('normal! i')
-  --   -- vim.api.nvim_put(update,"", false, false)
-  -- end
+  -- paste update into buffer
   vim.api.nvim_paste(update, true, -1)
 
+  -- should reselect text
   if vim.g.b64_select_after_serde == 1 then
     -- Select the new text
     vim.cmd('normal! `[v`]h')
@@ -44,13 +39,14 @@ function M.encdec(op)
 
   -- restore buffer contents
   vim.fn.setreg(reg, buf_cache)
+  -- reset paste mode
   vim.opt.paste=paste
 end
 
 -- http://lua-users.org/wiki/BaseSixtyFour
 local dic='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
 -- encoding
-function M.enc(data)
+function b64.enc(data)
   return ((data:gsub('.', function(x)
     local r,b='',x:byte()
     for i=8,1,-1 do r=r..(b%2^i-b%2^(i-1)>0 and '1' or '0') end
@@ -64,7 +60,7 @@ end)..({ '', '==', '=' })[#data%3+1])
 end
 
 -- decoding
-function M.dec(data)
+function b64.dec(data)
   data = string.gsub(data, '[^'..dic..'=]', '')
   return (data:gsub('.', function(x)
     if (x == '=') then return '' end
@@ -79,4 +75,4 @@ function M.dec(data)
 end))
 end
 
-return M
+return b64

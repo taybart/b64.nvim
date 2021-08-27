@@ -2,10 +2,13 @@
 
 Install:
 
-```shell
-# packer
+```lua
+-- packer
 use { 'taybart/b64.nvim' }
-# vim-plug
+```
+
+```vim
+" vim-plug
 Plug 'taybart/b64.nvim'
 ```
 
