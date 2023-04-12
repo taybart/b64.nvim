@@ -23,7 +23,10 @@ function b64.encdec(op)
   local buf_cache = vim.fn.getreg(reg)
 
   -- grab previously selected text into reg
-  vim.cmd('normal! gv"' .. reg .. 'x')
+  if vim.fn.mode() == 'n' then
+    vim.cmd('normal! gv')
+  end
+  vim.cmd('normal! "' .. reg .. 'x')
 
   -- perform op passed enc/dec
   local update = op(vim.fn.getreg(reg))
@@ -32,7 +35,7 @@ function b64.encdec(op)
   vim.api.nvim_paste(update, true, -1)
 
   -- should reselect text
-  if vim.g.b64_select_after_serde == 1 then
+  if vim.g.b64_select_after_serde == true then
     -- Select the new text
     vim.cmd('normal! `[v`]h')
   end
