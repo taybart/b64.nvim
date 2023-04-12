@@ -28,12 +28,6 @@ function b64.encdec(op)
   -- perform op passed enc/dec
   local update = op(vim.fn.getreg(reg))
 
-  -- backup one column if not at 0 for paste
-  -- local col = vim.fn.col('.')
-  -- if col ~= 0 then
-  -- local lnum = vim.fn.line('.')
-  -- vim.fn.cursor(lnum, col-1)
-  -- end
   -- paste update into buffer
   vim.api.nvim_paste(update, true, -1)
 
