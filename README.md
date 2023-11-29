@@ -8,8 +8,8 @@ Base64 encode and decode inside of vim.
 #### Install
 
 ```lua
--- packer
-use { 'taybart/b64.nvim' }
+-- lazy
+{ 'taybart/b64.nvim' }
 ```
 
 ```vim
